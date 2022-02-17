@@ -38,3 +38,13 @@ def count_bases(seq):
     for b in seq:
         d[b] += 1
     return d
+
+def seq_reverse(seq):
+    new_seq = seq[:20]
+    new_seq = new_seq[::-1] #[::-1] empieza por el final del string y va hasta la posicion -1 sin incluirlo
+    return new_seq
+
+def seq_complement(seq):
+    new_seq = seq[:20]
+    complement = {"A": "T", "C": "G", "G": "C", "T": "A"}
+    return "".join([complement[base] for base in new_seq]) #sustituimos una base por otra (el value por el key)
