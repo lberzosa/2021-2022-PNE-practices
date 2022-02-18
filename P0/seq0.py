@@ -50,8 +50,9 @@ def seq_complement(seq):
     return "".join([complement[base] for base in new_seq]) #sustituimos una base por otra (el value por el key)
 
 def most_base(seq):
+    bases = ["A", "C", "G", "T"]
     count_A, count_C, count_G, count_T = count_bases_seq(seq)
-    count = [count_A, count_C, count_G, count_T]
-    for d in seq:
-        most_base = zip(seq, count)
-    return max(most_base)
+    counts = [count_A, count_C, count_G, count_T]
+    zipped = zip(counts, bases)
+    u2 = max(zipped)
+    return u2
