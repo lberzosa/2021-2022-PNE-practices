@@ -1,4 +1,4 @@
-from seq1 import Seq
+from seq1clase import Seq
 
 st1 = "ACCTGC"
 st2 = "Hello? Am I a valid sequence?"

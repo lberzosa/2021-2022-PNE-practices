@@ -1,4 +1,4 @@
-import seq1 as s
+import seq1clase as s
 
 s1 = s.Seq("ACCTGC")
 s2 = s.Seq("Hello? Am I a valid sequence?")
