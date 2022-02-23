@@ -3,13 +3,15 @@ class Seq:
 
     def __init__(self, strbases = "NULL"):   # Initialize the sequence with the value
                                             # passed as argument when creating the object
-        self.strbases = strbases
+        self.strbases = strbases #aqui se crea la condicion de las bases
         if strbases == "NULL":
             print("NULL sequence created")
+            self.strbases = "NULL"
         elif not self.valid_sequence():
-            self.strbases == "ERROR"
+            self.strbases = "ERROR"
             print("INVALID seq!")
         else:
+            self.strbases = strbases
             print("New sequence created!")
 
     @staticmethod  # the function is expecting a normal argument
@@ -40,6 +42,6 @@ class Seq:
 
     def len(self):
         """Calculate the length of the sequence"""
-        if self.strbases == "NULL" and self.strbases == "ERROR":
-            len(self.strbases) == 0
+        new_len = ""
+        new_len = len(self.bases)
         return len(self.strbases)

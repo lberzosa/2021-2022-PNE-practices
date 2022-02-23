@@ -42,3 +42,7 @@ class Seq:
     def len(self):
         """Calculate the length of the sequence"""
         return len(self.strbases)
+
+    def seq_read_fasta(self, filename):
+        f = open("../session04/" + filename, r).read()
+        self.strbases = f[f.find("\n"):].replace("\n", "")

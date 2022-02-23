@@ -1,8 +1,8 @@
 import socket
 
 # Configure the Server's IP and PORT
-PORT = 8081
-IP = "192.168.1.36"
+PORT = 21000
+IP = "212.128.253.64"
 MAX_OPEN_REQUESTS = 5
 
 # Counting the number of connections
@@ -32,8 +32,8 @@ try:
         print("Message from client: {}".format(msg))
 
         # Send the messag
-        message = "Hello from the teacher's server"
-        send_bytes = str.encode(message)
+        message = "Hello from the teacher's server" #message = len(msg)
+        send_bytes = str.encode(message) # or str(message).encode()
         # We must write bytes, not a string
         clientsocket.send(send_bytes)
         clientsocket.close()
@@ -44,46 +44,3 @@ except socket.error:
 except KeyboardInterrupt:
     print("Server stopped by the user")
     serversocket.close()
-It will wait for the clients to connect. Once a client is connected, It will print the message given by the client (if any) and response with a greeting message
-
-Sending messages to the server from the command line
-Once the Teacher's server is running, we will use the commands printf and nc for sending messages to it. Execute the following command from your LAB computer. Change the IP and Port according to the Teacher's specification:
-
-printf "Testing!!! :-)" | nc 192.168.124.179 8080
-You will see the server's response printed on your console:
-
-
-
-In the Server's console, you will see your message:
-
-
-
-Client-1: Creating the socket and sending a message to the server
-Let's learn how to send messages from our python programs. We will assume that there is already a server running and we will connect to it and send them messages
-
-For doing that, we need sockets. For creating a socket we will use the system module socket
-
-Create the client.py file with this code (inside the Session-08 folder)
-
-import socket
-
-# SERVER IP, PORT
-# Write here the correct parameter for connecting to the
-# Teacher's server
-PORT = 8080
-IP = "192.168.124.179"
-
-
-# First, create the socket
-# We will always use this parameters: AF_INET y SOCK_STREAM
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# establish the connection to the Server (IP, PORT)
-s.connect((IP, PORT))
-
-# Send data. No strings can be send, only bytes
-# It necesary to encode the string into bytes
-s.send(str.encode("HELLO FROM THE CLIENT!!!"))
-
-# Closing the socket
-s.close()
