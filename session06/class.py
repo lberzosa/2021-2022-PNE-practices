@@ -1,11 +1,27 @@
 class Seq:
     """A class for representing sequences"""
+
+    #OTRA OPCION
+    BASES_ALLOWED = ['A', 'C', 'G', 'T'] #es una cosntante dentro de la clase, es una propiedad / atributo de clase
+    def are_bases_valid(strbases): #para for, el break se usa para salir, pero no lo solemos usar
+        valid = True
+        i = 0 #representa el indice / posicion
+        while valid and i < len(strbases):
+            if strbases[i] in Seq.BASES_ALLOWED: #una constante que le pertenece a toda la clase seq
+                i += 1
+            else:
+                valid = False
+        return valid
+
     def __init__(self, strbases):
         # Initialize the sequence with the value
         # passed as argument when creating the object
-        self.strbases = strbases
-
-        print("New sequence created!")
+        if Seq.are_bases_valid(strbases):
+            self.strbases = strbases #atributo de objeto
+            print("New sequence created!")
+        else:
+            self.strbases = "ERROR"
+            print("incorrect sequence detected!!")
 
     def __str__(self):
         """Method called when the object is being printed"""
@@ -34,12 +50,14 @@ class Gene(Seq):
        the methods from the Seq class
     """
     def __init__(self, strbases, name=""):
-
         # -- Call first the Seq initilizer and then the
         # -- Gene init method
-        super().__init__(strbases)
+        super().__init__(strbases) #el super hace alusion a la clase padre (en este caso es seq, clase que se hereda)
         self.name = name
         print("New gene created")
+
+    def __str__(self):
+        return self.name + "-" + self.strbases #especifico del gen, no lo tiene la clase secuencia
 
 # --- Main program
 s1 = Seq("AGTACACTGGT")

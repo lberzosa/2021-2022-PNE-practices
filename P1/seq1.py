@@ -43,5 +43,50 @@ class Seq:
     def len(self):
         """Calculate the length of the sequence"""
         new_len = ""
-        new_len = len(self.bases)
-        return len(self.strbases)
+        if self.strbases == "NULL" or self.strbases == "ERROR":
+            new_len = 0
+            return new_len
+        else:
+            return len(self.strbases)
+
+    def count_base(self):
+        count_A = 0
+        count_C = 0
+        count_G = 0
+        count_T = 0
+        for i in self.strbases:
+            if i == "A":
+                count_A += 1
+            elif i == "C":
+                count_C += 1
+            elif i == "G":
+                count_G += 1
+            elif i == "T":
+                count_T += 1
+        return count_A, count_C, count_G, count_T
+
+    def count(self):
+        d = {"A": 0, "C": 0, "G": 0, "T": 0}
+        for c in self.strbases:
+            if c in d:
+                d[c] += 1
+        return d
+
+    def reverse(self):
+        if self.strbases == "NULL":
+            reverse = "NULL"
+        elif self.strbases == "ERROR":
+            reverse = "ERROR"
+        else:
+            reverse = self.strbases[::-1]  # [::-1] empieza por el final del string y va hasta la posicion -1 sin incluirlo
+        return reverse
+
+    def complement(self):
+        if self.strbases == "NULL":
+            complement = "NULL"
+        elif self.strbases == "ERROR":
+            complement = "ERROR"
+        else:
+            complement = {"A": "T", "C": "G", "G": "C", "T": "A"}
+            return "".join([complement[base] for base in self.strbases])  # sustituimos una base por otra (el value por el key)
+        return complement
