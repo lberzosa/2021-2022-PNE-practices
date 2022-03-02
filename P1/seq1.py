@@ -73,20 +73,33 @@ class Seq:
         return d
 
     def reverse(self):
-        if self.strbases == "NULL":
-            reverse = "NULL"
-        elif self.strbases == "ERROR":
-            reverse = "ERROR"
+        if self.strbases == "NULL" or self.strbases == "ERROR":
+            return self.strbases
         else:
             reverse = self.strbases[::-1]  # [::-1] empieza por el final del string y va hasta la posicion -1 sin incluirlo
         return reverse
 
     def complement(self):
-        if self.strbases == "NULL":
-            complement = "NULL"
-        elif self.strbases == "ERROR":
-            complement = "ERROR"
+        if self.strbases == "NULL" or self.strbases == "ERROR":
+            return self.strbases
         else:
             complement = {"A": "T", "C": "G", "G": "C", "T": "A"}
-            return "".join([complement[base] for base in self.strbases])  # sustituimos una base por otra (el value por el key)
-        return complement
+        return "".join([complement[base] for base in self.strbases])  # sustituimos una base por otra (el value por el key)
+
+    def read_fasta(self, filename):
+        from pathlib import Path
+
+        file_contents = Path(filename).read_text()
+        lines = file_contents.splitlines()
+        body = lines[1:]
+        self.strbases = ""
+        for lines in body:
+            self.strbases += lines
+
+    def most_base(self):
+        bases = ["A", "C", "G", "T"]
+        count_A, count_C, count_G, count_T = self.count_base()
+        counts = [count_A, count_C, count_G, count_T]
+        zipped = zip(counts, bases)
+        u2 = max(zipped)
+        return u2
