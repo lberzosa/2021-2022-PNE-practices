@@ -1,5 +1,5 @@
 from client0 import Client
-IP = "192.168.1.45"
+IP = "localhost"
 PORT = 8080
 
 c = Client(IP, PORT)

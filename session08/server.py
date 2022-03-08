@@ -1,8 +1,8 @@
 import socket
 
 # Configure the Server's IP and PORT
-PORT = 21000
-IP = "212.128.253.64" #podemos usar IP = "localhost" (vincula las ips y no tengo que mirarlas)
+IP = "localhost"
+PORT = 8080 #podemos usar IP = "localhost" (vincula las ips y no tengo que mirarlas)
 MAX_OPEN_REQUESTS = 5
 
 # Counting the number of connections

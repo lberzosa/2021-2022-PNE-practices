@@ -21,6 +21,5 @@ class Client:
 
         response_bytes = client_socket.recv(2048) #recibir el mensaje
         response = response_bytes.decode("utf-8")
-
         client_socket.close()
         return response
