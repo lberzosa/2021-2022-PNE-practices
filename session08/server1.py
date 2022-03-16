@@ -12,7 +12,7 @@ number_con = 0 #cuantos clientes se conectan
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #USAR SIEMPRE af_inet : el socket se comunica con el ip, stream: lo que se envia y recibe son bytes
 try:
     serversocket.bind((IP, PORT)) #USAR SIEMPRE
-    # become a server socket
+    # become a html socket
     # MAX_OPEN_REQUESTS connect requests before refusing outside connections
     serversocket.listen(MAX_OPEN_REQUESTS) #USAR SIEMPRE
 
@@ -32,7 +32,7 @@ try:
         print("Message from client: {}".format(msg))
 
         # Send the messag
-        message = "Hello from the teacher's server" #message = len(msg)
+        message = "Hello from the teacher's html" #message = len(msg)
         send_bytes = str.encode(message) # or str(message).encode()
         # We must write bytes, not a string
         clientsocket.send(send_bytes)

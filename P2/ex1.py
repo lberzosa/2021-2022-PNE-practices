@@ -1,6 +1,6 @@
 from client0 import Client
 
-# -- Parameters of the server to talk to
+# -- Parameters of the html to talk to
 IP = "192.168.1.45"
 PORT = 8080
 

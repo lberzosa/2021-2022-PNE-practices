@@ -17,7 +17,7 @@ s.connect((SERVER_IP, SERVER_PORT))
 # It necesary to encode the string into bytes
 s.send(str.encode("HELLO FROM THE CLIENT!!!"))
 
-# Receive data from the server
+# Receive data from the html
 msg = s.recv(2048)
 print("MESSAGE FROM THE SERVER:\n")
 colorama.init()

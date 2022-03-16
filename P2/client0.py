@@ -7,7 +7,7 @@ class Client:
         print("OK!")
 
     def __str__(self):
-        sentence = "Connection to server at IP: " + str(self.ip) + " PORT: " + str(self.port)
+        sentence = "Connection to html at IP: " + str(self.ip) + " PORT: " + str(self.port)
         return sentence
 
     def talk(self, msg):
