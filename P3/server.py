@@ -48,6 +48,10 @@ try:
             seq = P1.seq1.Seq()
             seq.read_fasta()
 
+        elif cmd == "INFO":
+            bases = arg[1]
+            sequence = P1.seq1.Seq(bases)
+
         else:
             response = "This command is not available in the server.\n"
 
