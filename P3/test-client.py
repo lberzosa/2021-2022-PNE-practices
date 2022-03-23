@@ -36,11 +36,9 @@ print(msg)
 
 #6:
 print("GENE...")
-list_genes = ["U5.txt", "FRAT1.txt", "ADA.txt", "FXN.txt", "RNU6_269P.txt"]
-for g in list_genes:
-    print("TESTING", g, "...")
-    response = c.talk("GENE g")
-    print(response)
+gen_list = ["ADA.txt", "FRAT1.txt", "FXN.txt", "RNU6_269P.txt", "U5.txt"]
+for i in gen_list:
+    c.debug_talk(f"GENE {i}")
 
 #3:
 print("INFO...")

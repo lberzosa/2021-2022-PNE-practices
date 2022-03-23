@@ -103,3 +103,18 @@ class Seq:
         zipped = zip(counts, bases)
         u2 = max(zipped)
         return u2
+
+    def info(self):
+        print("Sequence: ", self.strbases)
+        print("Total lenght: ", len(self.strbases))
+        d = {"A": 0, "C": 0, "G": 0, "T": 0}
+        for b in self.strbases:
+            d[b] += 1
+        total = sum(d.values())
+        for k, v in d.items():
+            d[k] = [v, (v * 100) / total]
+        final_dict = d
+        message = ""
+        for k, v in final_dict.items():
+            message += k + ": " + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
+        return message

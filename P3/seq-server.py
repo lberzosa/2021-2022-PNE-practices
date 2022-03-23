@@ -1,6 +1,7 @@
 import socket
 import termcolor
 from seq import Seq
+import os
 
 ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -13,23 +14,6 @@ ls = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # -- Optional: This is for avoiding the problem of Port already in use
 ls.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-
-def info(arg):
-    print("Sequence: ", arg)
-    print("Total lenght: ", len(arg))
-    d = {"A": 0, "C": 0, "G": 0, "T": 0}
-    for b in arg:
-        d[b] += 1
-    total = sum(d.values())
-    for k, v in d.items():
-        d[k] = [v, (v * 100) / total]
-    final_dict = d
-    message = ""
-    for k, v in final_dict.items():
-        message += k + ": " + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
-    return message
-
 
 ls.bind((IP, PORT))
 ls.listen()
@@ -83,7 +67,8 @@ while True:
 
     elif cmd == "INFO":
         termcolor.cprint("INFO", "green")
-        response = info(arg)
+        arg = Seq(arg)
+        response = Seq.info(arg)
         print(response)
 
     elif cmd == "REV":
@@ -93,13 +78,10 @@ while True:
         response = "REV " + str(reverse)
 
     elif cmd == "GENE":
-        termcolor.cprint(cmd, "green")
-        list_genes = ["U5.txt", "FRAT1.txt", "ADA.txt", "FXN.txt", "RNU6_269P.txt"]
-        for l in list_genes:
-            if arg == l:
-                s = Seq()
-                response = str(s.read_fasta(arg))
-                print(response)
+        seq1 = Seq()  # aqui lo mismo porque confunde la clase con la variable
+        file = os.path.join(".", "sequences", f"{arg}")
+        seq1.read_fasta(file)
+        response = f"{seq1}\n"
 
     else:
         response = "This command is not available in the server.\n"
