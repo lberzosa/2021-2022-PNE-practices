@@ -83,9 +83,14 @@ while True:
         seq1.read_fasta(file)
         response = f"{seq1}\n"
 
+    elif cmd == "ADD":
+        termcolor.cprint("ADD", "green")
+        arg = Seq(arg)
+        response = Seq.sum(arg)
+        print(response)
+
     else:
         response = "This command is not available in the server.\n"
-
     # -- The message has to be encoded into bytes
     cs.send(response.encode()) # cs es el client socket
     cs.close()

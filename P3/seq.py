@@ -118,3 +118,12 @@ class Seq:
         for k, v in final_dict.items():
             message += k + ": " + str(v[0]) + " (" + str(round(v[1], 2)) + "%)" + "\n"
         return message
+
+    def sum(self):
+        print("Sequence: ", self.strbases)
+        complement = {"A": 3, "C": -2, "G": 4, "T": 6}
+        for k, v in complement.items():
+            complement[k] = sum(v)
+        message = ""
+        message += sum(v)
+        return message

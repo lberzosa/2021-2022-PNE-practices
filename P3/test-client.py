@@ -6,6 +6,8 @@ PORT = 21000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((IP, PORT))
 c = Client(IP, PORT)
+CONSTANT = "ACGTACGT"
+
 
 #1:
 print("PING...")
@@ -43,6 +45,11 @@ for i in gen_list:
 #3:
 print("INFO...")
 msg = c.debug_talk("INFO " + seq)
+print(msg)
+
+#7:
+print("ADD...")
+msg = c.talk("ADD" + CONSTANT)
 print(msg)
 
 s.close()
