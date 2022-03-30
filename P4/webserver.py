@@ -3,7 +3,7 @@ import termcolor
 import pathlib
 
 # -- Server network parameters
-IP = "127.0.0.1"
+IP = "localhost"
 PORT = 21000
 
 
@@ -35,16 +35,20 @@ def process_client(s):
     route = req_line.split(" ")[1]
     print("ROUTE", route)
     if route == "/":
-        body = pathlib.Path("html/index.html").read_text()
+        body = pathlib.Path("index.html").read_text()
     # -- Let's start with the body
-    elif route == "/goodbye":
-        body = pathlib.Path("html/goodbye.html").read_text()
-
+    elif route == "/info/A":
+        body = pathlib.Path("A.html").read_text()
+    elif route == "/info/C":
+        body = pathlib.Path("C.html").read_text()
+    elif route == "/info/G":
+        body = pathlib.Path("G.html").read_text()
+    elif route == "/info/T":
+        body = pathlib.Path("T.html").read_text()
     elif route == "/favicon.ico":
         body = pathlib.Path("index.html").read_text()
     else:
-        filename = route[1:]
-        body = pathlib.Path("html/" + filename + ".html").read_text()
+        body = pathlib.Path("error.html").read_text()
 
     # -- Status line: We respond that everything is ok (200 code)
     status_line = "HTTP/1.1 200 OK\n"
