@@ -1,6 +1,7 @@
 import http.server
 import socketserver
 import termcolor
+import pathlib
 
 # Define the Server's port
 PORT = 21000
@@ -17,13 +18,12 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         """This method is called whenever the client invokes the GET method
         in the HTTP protocol request"""
 
-        # We just print a message
-        print("GET received! Request line:")
+        termcolor.cprint(self.requestline, 'green')
+        path = self.requestline.split(" ")[1]
 
-        # Print the request line
-        termcolor.cprint("  " + self.requestline, 'green')
+        if path == "/" or path == "/info":
+            nnn
 
-        contents = "hello i am the happy server :)"
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!

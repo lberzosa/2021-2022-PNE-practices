@@ -60,6 +60,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 "gene_name": gene_name,
                 "sequence": sequence
             })
+        elif path == "/operation":
+            sequence = arguments["sequence"][0]
+            operation = arguments["operation"][0]
+            if operation == "rev":
+
         else:
             contents = Path("../P4/error.html").read_text()
 
