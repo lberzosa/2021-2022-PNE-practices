@@ -22,37 +22,32 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         path = self.requestline.split(" ")[1]
 
         if path == "/" or path == "/info":
-            nnn
+            contents = pathlib.Path("htmls/index.html").read_text()
 
+        else:
+            try:
+                filename = str(path) + ".html"
+                contents = pathlib.Path(filename.strip("/")).read_text()
+            except FileNotFoundError:
+                contents = pathlib.Path("info/error.html").read_text()
 
-        # Generating the response message
         self.send_response(200)  # -- Status line: OK!
 
-        # Define the content-type header:
         self.send_header('Content-Type', 'text/plain')
         self.send_header('Content-Length', len(contents.encode()))
 
-        # The header is finished
         self.end_headers()
 
-        # Send the response message
         self.wfile.write(contents.encode())
 
         return
 
-# ------------------------
-# - Server MAIN program
-# ------------------------
-# -- Set the new handler
 Handler = TestHandler
 
-# -- Open the socket server
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
 
     print("Serving at PORT", PORT)
 
-    # -- Main loop: Attend the client. Whenever there is a new
-    # -- clint, the handler is called
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
