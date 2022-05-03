@@ -23,6 +23,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         if path == "/" or path == "/info":
             contents = pathlib.Path("htmls/index.html").read_text()
+            #hsjdgjasbdMNBDSMNbdmfnBDSNFM
 
         else:
             try:
