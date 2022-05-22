@@ -1,19 +1,39 @@
 import http.server
 import socketserver
-import termcolor  # if we have it in gery it means we are not using the module yet
+import termcolor
 from pathlib import Path
 import jinja2 as j
+import http.client
 from urllib.parse import parse_qs, urlparse
+import json
 
 HTML_FOLDER = "./html/"
-LIST_SEQUENCES = ["ACGTCCAGTAAA", "ACGTAGTTTTTAAACCC", "GGGTAAACTACG",
-                  "CGTAGTACGTA", "TGCATGCCGAT", "ATATATATATATATATATA"]
-LIST_GENES = ["ADA", "FRAT1", "FXN", "RNU6_269P", "U5"]
+SERVER = 'rest.ensembl.org'
+PARAMS = '?content-type=application/json'
 
 def read_html_file(filename):
     contents = Path(HTML_FOLDER + filename).read_text()
     contents = j.Template(contents)
     return contents
+
+
+def make_ensembl_request(url, params):
+    conn = http.client.HTTPConnection(SERVER)
+    parameters = '?content-type=application/json'
+    try:
+       conn.request("GET", url + parameters + params)
+
+    except ConnectionRefusedError:
+        print("ERROR! Cannot connect to the Server")
+        exit()
+
+    r1 = conn.getresponse()
+
+    print(f"Response received!: {r1.status} {r1.reason} \n")
+    data1 = r1.read().decode('utf-8')  #this is the dictionary
+
+    data2 = json.loads(data1)
+    return data2
 
 def count_bases(seq):
     d = {"A": 0, "C": 0, "G": 0, "T": 0}
@@ -53,7 +73,7 @@ def info_operation(arg):
     return response
 
 # Define the Server's port
-PORT = 21000
+PORT = 8081
 
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
@@ -78,28 +98,29 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         # Message to send back to the client
         if self.path == "/": # son los endpoints
             contents = read_html_file("index.html")\
-                .render(context=
-                        {"n_sequences": len(LIST_SEQUENCES),
-                         "genes": LIST_GENES}) # render es para pasar el jinja a texto (formato json)
+                .render() # render es para pasar el jinja a texto (formato json)
 
-        elif path == "/ping":
-            contents = read_html_file(path[1:] + ".html").render() # nos quitamos el / y asi puede buscar directamente el ping.html
-        elif path == "/get":
-            n_sequence = int(arguments["n_sequence"][0])  # el 0 indica un valor para una llave. es lo que te va a pedir el servidor
-            sequence = LIST_SEQUENCES[n_sequence]
+        elif path == "/listSpecies":
+            dict_answer = make_ensembl_request("/info/species", "")
+            limit = int(arguments["limit"][0])  # el 0 indica un valor para una llave. es lo que te va a pedir el servidor
+            species = dict_answer["species"]
+            length = len(species)
+            species_2 = []
+            for i in range(0, limit):
+                species_2.append(species[i]['common_name'])
             contents = read_html_file(path[1:] + ".html")\
                 .render(context = {
-                "n_sequence": n_sequence,
-                "sequence": sequence
+                "species": species_2,
+                "number": length,
+                "limit": limit
             })
-        elif path == "/gene":
-            gene_name = arguments["genes"][0]
-            sequence = Path("./sequences/" + gene_name + ".txt").read_text()
-            sequence = sequence[sequence.find("\n"):].replace("\n", "")
-            contents = read_html_file( path + ".html") \
+        elif path == "/karyotype":
+            species2 = arguments["species2"][0]
+            dict_answer = make_ensembl_request("/info/species" + species2, "")
+            karyotype = dict_answer['karyotype']
+            contents = read_html_file(path[1:] + ".html") \
                 .render(context={
-                "gene_name": gene_name,
-                "sequence": sequence
+                "chromosomes": karyotype
             })
         elif path == "/operation":
             sequence = arguments["msg"][0]

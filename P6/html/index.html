@@ -2,45 +2,52 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Seq2 server</title>
+        <title>Seq2 Server</title>
     </head>
     <body>
-    <h1>Seq2 Server</h1>
+    <h1>Seq2 Server </h1>
         <p>Access to the server</p>
+
         <hr>
-        <form action="/ping">
-            is the server alive?
-            <input type="submit" value="PING">
+
+        <form action ="/ping" >
+            Is the server alive? <input type="submit" value ="PING">
         </form>
         <hr>
-        <form action="/get">
-            Get a sequence. Select a sequence number.
-            <select name="n_sequence">
-                {% for n in range (context.n_sequence) %}
+        <form action ="/get">
+             Get a sequence. Select a sequence number:
+            <select name="n_sequence" >
+                    {% for n in range (context.n_sequences) %}
                 <option value={{n}}>{{n}}</option>
                 {% endfor %}
-            </select> #listas de numeritos para seleccionar
-            <input type="sumbmit" value="GET">
+            </select>
+            <input type="submit" value="GET">
         </form>
+
         <hr>
-        <form action="/gene">
-            Get a gene. Select a gene name.
-            <select name="genes">
-                {% for g in context.genes %}
+        <form action ="/gene">
+             Get a sequence. Select a sequence number:
+            <select name="genes" >
+                {% for n in context.genes %}
                 <option value={{n}}>{{n}}</option>
                 {% endfor %}
             </select>
             <input type="submit" value="GENE">
         </form>
         <hr>
-        <form action="/operation">
-            Write a sequence: <input type="text" name="msg">
-            <br><br>
-            Select an operation.
-            <input type="radio" name="operation" value="info" checked> Info
-            <input type="radio" name="operation" value="comp"> Comp
-            <input type="radio" name="operation" value="rev"> Rev
-            <input type="submit" value="OPERATE">
+        <form action ="/operation">
+            Write a sequence:
+          <input type="text" name="msg">
+          <br>
+          Select operation:
+          <input type="radio" name="option" value="Info" checked> Info
+          <input type="radio" name="option" value="Comp"> Comp
+          <input type="radio" name="option" value="Rev"> Rev
+          <br>
+          Perform operation:
+          <input type="submit" value="OPERATE"/>
         </form>
         </body>
         </html>
+
+# el select son listas de numeritos para seleccionar
