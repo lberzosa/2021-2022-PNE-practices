@@ -24,7 +24,7 @@
              2) Information about the karyotype
             <br>
             <br>
-            select the species: <input type="text" name="species2">
+            select the species: <input type="text" name="speciess">
             <br>
             <br>
             <input type="submit" value="send">
@@ -35,13 +35,61 @@
              3) Chromosome length
             <br>
             <br>
-            Select the species: <input type="text" name="msg">
+            Select the species: <input type="text" name="specie_3">
             <br>
             <br>
-            Select a chromosome: <input type="type" name="msg">
+            Select a chromosome: <input type="type" name="chromosome">
             <br>
             <br>
             <input type="submit" value="send">
         </form>
+
+        <hr>
+        <form action="/geneSeq">
+        4)Select a gene
+            <br>
+            <br>
+            <select name="seq" >
+             {% for n in context.n_names %}
+                <option value={{n}}>{{n}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <input type="submit" value="Send">
+         </form>
+        <hr>
+        <form action="/geneInfo">
+            5) Select a human gene:
+            <br>
+            <br>
+            <select name="info" >
+             {% for n in context.n_names %}
+                <option value={{n}}>{{n}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Send">
+        </form>
+
+        <hr>
+        <form action="/geneCalc">
+            6) Select a human gene to perform some calculations:
+            <br>
+            <br>
+            <select name="calc" >
+             {% for n in context.n_names %}
+                <option value={{n}}>{{n}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Send">
+        </form>
+
+        <hr>
+
+        <form action="/geneList">
+            7) Gene list:
+
+        </form>
+
         </body>
         </html>

@@ -41,6 +41,7 @@ try:
     # -- Read the response's body
     data1 = r1.read().decode("utf-8")
     data1 = json.loads(data1)#the json thing is getting the integer/float/str and transforming the data in the appropiate language to make a dictionary
+    print(data1)
     print("GENE:", KEY)
     print("DESCRIPTION:", data1['desc'])
     print("BASES:", data1["seq"])
