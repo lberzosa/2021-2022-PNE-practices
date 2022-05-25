@@ -89,6 +89,12 @@ while True:
         response = Seq.sum(arg)
         print(response)
 
+    elif cmd == "OPE": #PARA EL EXAMEN ANTERIOR
+        termcolor.cprint(cmd, "green")
+        seq = Seq(arg)
+        response = str(seq.add_seq())
+        print(response)
+
     else:
         response = "This command is not available in the server.\n"
     # -- The message has to be encoded into bytes

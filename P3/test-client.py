@@ -52,4 +52,7 @@ print("ADD...")
 msg = c.talk("ADD" + CONSTANT)
 print(msg)
 
+response = c.talk("OPE ACGT") #EXAMEN ANTERIOR
+print(response)
+
 s.close()

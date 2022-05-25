@@ -117,3 +117,13 @@ class Seq:
         for k, v in final_dict.items():
             message += k + ": " + str(v[0]) + " (" + str(round(v[1], 1)) + "%)" + "\n"
         return message
+
+    def add_seq(self): #DEL EXAMEN ANTERIOR PARA ABRIR EL DICTADO Y SUMARLOTODO
+        d = {'A': 4, 'T': -6, 'C': -3, 'G': 7}
+        addition = 0
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            addition = "We could not sum the bases since the sequence is not correct."
+        else:
+            for i in self.strbases:
+                addition += d[i]
+        return addition

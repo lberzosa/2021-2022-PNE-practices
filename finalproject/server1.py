@@ -34,7 +34,7 @@ def read_html_file(filename):
     return contents
 
 
-def make_ensembl_request(url, params):
+def make_ensembl_request(url, params=""):
     conn = http.client.HTTPConnection(SERVER)
     parameters = '?content-type=application/json'
     try:
@@ -50,7 +50,9 @@ def make_ensembl_request(url, params):
     data1 = r1.read().decode('utf-8')  #this is the dictionary
 
     data2 = json.loads(data1)
+    print(data2)
     return data2
+
 
 def count_bases(seq):
     d = {"A": 0, "C": 0, "G": 0, "T": 0}
@@ -78,7 +80,7 @@ def info_operation(arg):
     return response
 
 # Define the Server's port
-PORT = 8080
+PORT = 8081
 
 # -- This is for preventing the error: "Port already in use"
 socketserver.TCPServer.allow_reuse_address = True
@@ -107,44 +109,60 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         elif path == "/listSpecies": #dos tipos de errores
             dict_answer = make_ensembl_request("/info/species", "")
-            limit = int(arguments["limit"][0])  # el 0 indica un valor para una llave. es lo que te va a pedir el servidor
-            species = dict_answer["species"] #queremos las especies en general
-            length = len(species)
-            species_2 = [] #creamos una lista a la que vamos añadiendo las especies
-            for i in range(0, limit):
-                species_2.append(species[i]['common_name'])
-            contents = read_html_file(path[1:] + ".html")\
-                .render(context = {
-                "species": species_2,
-                "number": length,
-                "limit": limit
-            })
+            species = dict_answer["species"]  # queremos las especies en general
+            try:
+                limit = int(arguments["limit"][0])  # el 0 indica un valor para una llave. es lo que te va a pedir el servidor
+                length = len(species)
+                species_2 = [] #creamos una lista a la que vamos añadiendo las especies
+                for i in range(0, limit):
+                    species_2.append(species[i]['common_name'])
+                contents = read_html_file(path[1:] + ".html")\
+                    .render(context = {
+                    "species": species_2,
+                    "number": length,
+                    "limit": limit
+                })
+            except Exception:
+                contents = read_html_file("error.html")\
+                    .render()
+
         elif path == "/karyotype": #1 tipo de error
-            speciess = arguments["speciess"][0] #speciess lo ponemos aqui y en el html y es lo que aparecerá en el web, es porque queremos una en concreto
-            dict_answer = make_ensembl_request("/info/assembly/" + speciess, "") #speciess es el diccionario concreto, una key una concreta
-            karyotype = dict_answer["karyotype"]
-            contents = read_html_file(path[1:] + ".html") \
-                .render(context={
-                "karyotype": karyotype
-            })
+            try:
+                speciess = arguments["speciess"][0] #speciess lo ponemos aqui y en el html y es lo que aparecerá en el web, es porque queremos una en concreto
+                dict_answer = make_ensembl_request("/info/assembly/" + speciess, "") #speciess es el diccionario concreto, una key una concreta
+                print(dict_answer)
+                karyotype = dict_answer["karyotype"]
+                contents = read_html_file(path[1:] + ".html") \
+                    .render(context={
+                    "karyotype": karyotype
+                })
+            except KeyError:
+                contents = read_html_file("error.html")\
+                    .render()
+
         elif path == "/chromosomeLenght": #dos tipos de errores
             specie_3 = str(arguments['specie_3'][0].strip()) #quitamos espacios para que lo lea, solo lee el espacio sino
             dict_answer = make_ensembl_request("/info/assembly/" + specie_3, "")
             chromo = int(arguments['chromosome'][0].strip())
-            list = dict_answer["top_level_region"]
-            line = []
-            for i in range(0, len(list)):
-                line.append(list[i]["name"]) #los agrupamos por especie (como en el 1)
+            try:
+                list = dict_answer["top_level_region"]
+                line = []
+                for i in range(0, len(list)):
+                    line.append(list[i]["name"]) #los agrupamos por especie (como en el 1)
 
-            position = line.index(str(chromo))
-            wanted_line = list[position]
+                position = line.index(str(chromo))
+                wanted_line = list[position]
 
-            length = int(wanted_line["length"])
-            print(arguments)
+                length = int(wanted_line["length"])
+                print(arguments)
 
-            contents = read_html_file(path[1:] + ".html") \
-                .render(context={
-                "chromo": length})
+                contents = read_html_file(path[1:] + ".html") \
+                    .render(context={
+                    "chromo": length})
+
+            except Exception:
+                contents = read_html_file("error.html")\
+                    .render()
 
         elif path == "/geneSeq":
             seq = arguments['seq'][0]
@@ -174,7 +192,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 "start": start_gene,
                 "end": end_gene,
                 "id": key,
-                "le": le, #mirar que pasa con la lenght
+                "le": le, #mirar que pasa con la lenght de los huevos
                 "chromosome": chromosome,
             })
 
@@ -192,16 +210,31 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 "t_lenght": total_lenght
             })
 
-        elif path == "/geneList": #INTENTAR ENTENDERLO
-            chromo = arguments["chromo"][0]
+        elif path == "/geneList":
+            specie = arguments["specie"][0]
             start = arguments["start"][0]
             end = arguments["end"][0]
-            everything = chromo + ":" + start + "-" + end
-            dict_answer = ("/phenotype/region/homo_sapiens/" + everything, ";feature=gene;feature=transcript;feature=cds;feature=exon")
-            print(dict_answer)
-            contents = read_html_file(path[1:] + ".html")\
+            name = arguments["n_chromo"][0]
+            everything = name + ":" + start + "-" + end
+            dict_answer = make_ensembl_request("phenotype/region/" + specie + "/" + everything, "")
+            lists = []
+            b = []
+            gene_list = []
+            for i in range(0, len(dict_answer)):
+                lists.append(dict_answer[i]["phenotype_association"]) #nos metemos dentro del phenotype association
+                for c in lists: #c son todas las keys en phenotype_association
+                    for d in c: #d son los values de las keys
+                        if "attributes" in d: #si existe attributes como value, lo appendeamos
+                            b.append(d["attributes"])
+                            for t in b: #para los values de attributes, que es una key appendeada en una lista
+                                for k,v in t.items(): #para keys y values en los items de t, que ahora es key
+                                    if k == "associated_gene": #si la key es associated_genes, appendeamos su value
+                                        v = t[k]
+                                        gene_list.append(v)
+
+            contents = read_html_file(path[1:] + ".html") \
                 .render(context={
-                "gene": chromo
+                "gene": gene_list
             })
 
         else:

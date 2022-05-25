@@ -127,3 +127,13 @@ class Seq:
         message = ""
         message += sum(v)
         return message
+
+    def add_seq(self): #PARA EL EXAMEN DEL MID
+        d = {'A': 4, 'T': -6, 'C': -3, 'G': 7}
+        addition = 0
+        if self.strbases == "ERROR" or self.strbases == "NULL":
+            addition = "We could not sum the bases since the sequence is not correct."
+        else:
+            for i in self.strbases:
+                addition += d[i]
+        return addition
