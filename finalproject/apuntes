@@ -1,0 +1,9 @@
+#for i in range(0, len(dict_answer)):
+    #lists.append(dict_answer[i]["phenotype_associations"])  # nos metemos dentro del phenotype association)
+#for c in lists: #c son todas las keys en phenotype_association
+#for d in c: #d son los values de las keys
+#for t in b:  # para los values de attributes, que es una key appendeada en una lista
+    #for k, v in t.items():  # para keys y values en los items de t, que ahora es key
+        #if k == "associated_gene":  # si la key es associated_genes, appendeamos su value
+            #v = t[k]
+            #gene_list.append(v)

@@ -7,8 +7,11 @@
 <h1>Gene list</h1>
 <body style="background-color: lightgray">
 The names of the genes are:
-{% for g in context.gene %}
-<p>{{g}}</p>
-{% endfor %}}
+<ul>
+    {% for g in context.n_g%}
+<li><p>{{g}}</p></li>
+{% endfor %}
+</ul>
+<a href="/">Main page</a>
 </body>
 </html>

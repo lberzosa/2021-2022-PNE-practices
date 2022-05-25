@@ -1,60 +1,55 @@
-
 import http.client
 import json
 import termcolor
 
-PORT = 8080
-SERVER = 'localhost'
+PORT = 8081
+IP = "localhost"
+SERVER = 'rest.ensembl.org'
 
-print(f"\nConnecting to server: {SERVER}:{PORT}\n")
 
-# Connect with the server
-conn = http.client.HTTPConnection(SERVER, PORT)
+def connect_server(url, params=""):
+    conn = http.client.HTTPConnection(SERVER)
+    parameters = '?content-type=application/json'
+    try:
+       conn.request("GET", url + parameters + params)
 
-# -- Send the request message, using the GET method. We are
-# -- requesting the main page (/)
-try:
-    conn.request("GET", "/listusers")
-except ConnectionRefusedError:
-    print("ERROR! Cannot connect to the Server")
-    exit()
+    except ConnectionRefusedError:
+        print("ERROR! Cannot connect to the Server")
+        exit()
 
-# -- Read the response message from the server
-r1 = conn.getresponse()
+    r1 = conn.getresponse()
 
-# -- Print the status line
-print(f"Response received!: {r1.status} {r1.reason}\n")
+    print(f"Response received!: {r1.status} {r1.reason} \n")
+    data1 = r1.read().decode('utf-8')  #this is the dictionary
 
-# -- Read the response's body
-data1 = r1.read().decode("utf-8")
+    data2 = json.loads(data1)
+    return data2
 
-# -- Create a variable with the data,
-# -- form the JSON received
-person = json.loads(data1)
 
-print("CONTENT: ")
+data_species = connect_server("/listSpecies", "?limit=10&json=1")
+print("LIST OF SPECIES IN THE BROWSER")
+print(data_species)
 
-# Print the information in the object
-print()
-termcolor.cprint("Name: ", 'green', end="")
-print(person['Firstname'], person['Lastname'])
+data_karyotype = connect_server("/karyotype", "?speciess=mouse&json=1")
+print("KARYOTYPE OF A SPECIFIC SPECIES")
+print(data_karyotype)
 
-termcolor.cprint("Age: ", 'green', end="")
-print(person['age'])
+data_chromosome_length = connect_server("/chromosomeLength", "?specie_3=mouse&chromosome=9&json=1")
+print("LENGTH OF A SELECTED CHROMOSOME")
+print(data_chromosome_length)
 
-# Get the phoneNumber list
-phoneNumbers = person['phoneNumber']
+data_gene_sequence = connect_server("/geneSeq", "?seq=FRAT1&json=1")
+print("GENE SEQUENCE")
+print(data_gene_sequence)
 
-# Print the number of elements int the list
-termcolor.cprint("Phone numbers: ", 'green', end='')
-print(len(phoneNumbers))
+data_gene_information = connect_server("/geneInfo", "?info=FRAT1&json=1")
+print("GENE INFORMATION")
+print(data_gene_information)
 
-# Print all the numbers
-for i, num in enumerate(phoneNumbers):
-    termcolor.cprint("  Phone {}:".format(i), 'blue')
+data_gene_calculation = connect_server("/geneCalc", "?calc=FRAT1&json=1")
+print("GENE CALCULATIONS")
+print(data_gene_calculation)
 
-    # The element num contains 2 fields: number and type
-    termcolor.cprint("    Type: ", 'red', end='')
-    print(num['type'])
-    termcolor.cprint("    Number: ", 'red', end='')
-    print(num['number'])
+data_gene_list = connect_server("/geneList", "?name=18&start=22125500&end=22136000&json=1")
+print("GENE LIST")
+print(data_gene_list)

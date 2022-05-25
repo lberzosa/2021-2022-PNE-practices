@@ -50,7 +50,7 @@ def make_ensembl_request(url, params=""):
     data1 = r1.read().decode('utf-8')  #this is the dictionary
 
     data2 = json.loads(data1)
-    print(data2)
+    #print(data2)
     return data2
 
 
@@ -108,37 +108,68 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 .render(context={"n_names": names_list}) #poner aqui las que sean de desglosar una lista SIEMPRE
 
         elif path == "/listSpecies": #dos tipos de errores
-            dict_answer = make_ensembl_request("/info/species", "")
-            species = dict_answer["species"]  # queremos las especies en general
             try:
+                dict_answer = make_ensembl_request("/info/species", "")
+                species = dict_answer["species"]  # queremos las especies en general
                 limit = int(arguments["limit"][0])  # el 0 indica un valor para una llave. es lo que te va a pedir el servidor
                 length = len(species)
                 species_2 = [] #creamos una lista a la que vamos añadiendo las especies
-                for i in range(0, limit):
-                    species_2.append(species[i]['common_name'])
-                contents = read_html_file(path[1:] + ".html")\
-                    .render(context = {
-                    "species": species_2,
-                    "number": length,
-                    "limit": limit
-                })
-            except Exception:
-                contents = read_html_file("error.html")\
-                    .render()
+                if limit > int(length):
+                    message = "sorry, you picked a number too high"
+                else:
+                    message = ""
+                    for i in range(0, limit):
+                        species_2.append(species[i]['common_name'])
+                if "json" in arguments:
+                    contents = {"species": species_2, "number": length, "limit": limit}
+                else:
+                    contents = read_html_file(path[1:] + ".html")\
+                        .render(context = {
+                        "species": species_2,
+                        "number": length,
+                        "limit": limit,
+                        "message": message
+                    })
+
+            except KeyError: #if there is no limit specified
+                dict_answer = make_ensembl_request("/info/species", "")
+                species = dict_answer["species"]
+                length = len(species)
+                species_3 = []
+                for i in range(0, int(length)):
+                    species_3.append(species[i]['common_name'])
+                if "json" in arguments:
+                    contents = {"all_species": species_3}
+                else:
+                    contents = read_html_file(path[1:] + ".html")\
+                        .render(context={
+                        "all_species": species_3
+                    })
+            except ValueError:
+                if "json" in arguments:
+                    contents = {"error": "sorry, you have a mistake"}
+                else:
+                    contents = read_html_file("error.html")\
+                        .render()
 
         elif path == "/karyotype": #1 tipo de error
             try:
-                speciess = arguments["speciess"][0] #speciess lo ponemos aqui y en el html y es lo que aparecerá en el web, es porque queremos una en concreto
+                speciess = arguments["speciess"][0].strip() #speciess lo ponemos aqui y en el html y es lo que aparecerá en el web, es porque queremos una en concreto
                 dict_answer = make_ensembl_request("/info/assembly/" + speciess, "") #speciess es el diccionario concreto, una key una concreta
-                print(dict_answer)
                 karyotype = dict_answer["karyotype"]
-                contents = read_html_file(path[1:] + ".html") \
-                    .render(context={
-                    "karyotype": karyotype
-                })
+                if "json" in arguments:
+                    contents = {"karyotype": karyotype}
+                else:
+                    contents = read_html_file(path[1:] + ".html") \
+                        .render(context={
+                        "karyotype": karyotype})
+
             except KeyError:
-                contents = read_html_file("error.html")\
-                    .render()
+                if "json" in arguments:
+                    contents = {"error": "you got an incorrect species, try again"}
+                else:
+                    contents = read_html_file("error.html")\
+                        .render()
 
         elif path == "/chromosomeLenght": #dos tipos de errores
             specie_3 = str(arguments['specie_3'][0].strip()) #quitamos espacios para que lo lea, solo lee el espacio sino
@@ -154,26 +185,33 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 wanted_line = list[position]
 
                 length = int(wanted_line["length"])
-                print(arguments)
 
-                contents = read_html_file(path[1:] + ".html") \
-                    .render(context={
-                    "chromo": length})
+                if "json" in arguments:
+                    contents = {"chromo": length}
+                else:
+                    contents = read_html_file(path[1:] + ".html") \
+                        .render(context={
+                        "chromo": length})
 
             except Exception:
-                contents = read_html_file("error.html")\
-                    .render()
+                if "json" in arguments:
+                    contents = {"error": "you got an error, please try again"}
+                else:
+                    contents = read_html_file("error.html")\
+                        .render()
 
         elif path == "/geneSeq":
             seq = arguments['seq'][0]
             key = genes_dict[seq]
             dict_answer = make_ensembl_request("/sequence/id/" + str(key), "")
             info = dict_answer["seq"]
-            contents = read_html_file(path[1:] + ".html") \
-                .render(context={
-                "sequence": info,
-                "names": names
-            })
+            if "json" in arguments:
+                contents = {"sequence": info}
+            else:
+                contents = read_html_file(path[1:] + ".html") \
+                    .render(context={
+                    "sequence": info,
+                })
 
         elif path == "/geneInfo":
             info = arguments["info"][0]
@@ -187,14 +225,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             end_gene = int(info_split[4])
             chromosome = info_split[1]
             le = s.len()
-            contents = read_html_file(path[1:] + ".html")\
-                .render(context={
-                "start": start_gene,
-                "end": end_gene,
-                "id": key,
-                "le": le, #mirar que pasa con la lenght de los huevos
-                "chromosome": chromosome,
-            })
+            if "json" in arguments:
+                contents = {"start": start_gene, "end": end_gene, "id": key, "le": le, "chromosome": chromosome}
+            else:
+                contents = read_html_file(path[1:] + ".html")\
+                    .render(context={
+                    "start": start_gene,
+                    "end": end_gene,
+                    "id": key,
+                    "le": le,
+                    "chromosome": chromosome,
+                })
 
         elif path == "/geneCalc":
             gene_calc = arguments["calc"][0]
@@ -204,50 +245,64 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
             seq = seq1.Seq(seq_1) #usamos la seq de la practica 1
             percentage_bases = seq.info() #aqui tenemos la funcion hecha hace mazo de los percentages
             total_lenght = seq.len()
-            contents = read_html_file(path[1:] + ".html")\
-                .render(context={
-                "percentages": percentage_bases,
-                "t_lenght": total_lenght
-            })
+            if "json" in arguments:
+                contents = {"percentages": percentage_bases, "t_lenght": total_lenght}
+            else:
+                contents = read_html_file(path[1:] + ".html")\
+                    .render(context={
+                    "percentages": percentage_bases,
+                    "t_lenght": total_lenght
+                })
 
-        elif path == "/geneList":
-            specie = arguments["specie"][0]
-            start = arguments["start"][0]
-            end = arguments["end"][0]
-            name = arguments["n_chromo"][0]
-            everything = name + ":" + start + "-" + end
-            dict_answer = make_ensembl_request("phenotype/region/" + specie + "/" + everything, "")
-            lists = []
-            b = []
-            gene_list = []
-            for i in range(0, len(dict_answer)):
-                lists.append(dict_answer[i]["phenotype_association"]) #nos metemos dentro del phenotype association
-                for c in lists: #c son todas las keys en phenotype_association
-                    for d in c: #d son los values de las keys
-                        if "attributes" in d: #si existe attributes como value, lo appendeamos
-                            b.append(d["attributes"])
-                            for t in b: #para los values de attributes, que es una key appendeada en una lista
-                                for k,v in t.items(): #para keys y values en los items de t, que ahora es key
-                                    if k == "associated_gene": #si la key es associated_genes, appendeamos su value
-                                        v = t[k]
-                                        gene_list.append(v)
+        elif path == "/geneList": #MIRAR ESTE QUE ESTA HECHO UN POCO LIO
+            try:
+                species = str(arguments["species"][0].strip())
+                start = str(arguments["start"][0].strip())
+                end = str(arguments["end"][0].strip())
+                name = str(arguments["name"][0].strip())
+                everything = name + ":" + start + "-" + end
+                dict_answer = make_ensembl_request("phenotype/region/" + species + "/" + everything, ";feature_type=Variation")
+                try:
+                    if len(dict_answer) > 0:
+                        gene_list = []
+                        for i in range(0, len(dict_answer)):
+                            for c in dict_answer[i]["phenotype_associations"]: #para las keys in la lista de phenotype
+                                if "attributes" in c: #si existe esa key
+                                    if "associated_gene" in c["attributes"]: #si existe ese value dentro de esa key
+                                        gene_list.append(c["attributes"]["associated_gene"]) #appendear los values y las keys
+                        if "json" in arguments:
+                            contents = {"n_g": gene_list}
+                        else:
+                            contents = read_html_file(path[1:] + ".html") \
+                                .render(context={
+                                "n_g": gene_list
+                            })
 
-            contents = read_html_file(path[1:] + ".html") \
-                .render(context={
-                "gene": gene_list
-            })
-
-        else:
-            contents = "im the happy server"
-
-
-
+                    elif len(dict_answer) == 0:
+                        contents = read_html_file("error.html") \
+                            .render()
+                except TypeError:
+                    if "json" in arguments:
+                        contents = {"error": "you got an error"}
+                    else:
+                        contents = read_html_file("error.html") \
+                            .render()
+            except KeyError:
+                if "json" in arguments:
+                    contents = {"error": "you got an error"}
+                else:
+                    contents = read_html_file("error.html") \
+                        .render()
 
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
 
-        # Define the content-type header:
-        self.send_header('Content-Type', 'text/html')
+        if "json" in arguments.keys():
+            contents = json.dumps(contents)
+            self.send_header('Content-Type', 'application/json')
+
+        else:
+            self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(contents.encode()))
 
         # The header is finished
@@ -278,3 +333,4 @@ with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print("")
         print("Stoped by the user")
         httpd.server_close()
+

@@ -15,6 +15,14 @@ The names of the species are:
 %}
 <p>{{s}}</p>
 {% endfor %}
+<br>
+
+{% for s in context.all_species
+%}
+<p>{{s}}</p>
+{% endfor %}
+<br>
+{{context.message}}
 <a href="/">Main page</a>
 </body>
 </html>
