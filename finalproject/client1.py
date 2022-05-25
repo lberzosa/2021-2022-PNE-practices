@@ -8,6 +8,7 @@ SERVER = 'rest.ensembl.org'
 
 
 def connect_server(url, params=""):
+
     conn = http.client.HTTPConnection(SERVER)
     parameters = '?content-type=application/json'
     try:
@@ -26,7 +27,7 @@ def connect_server(url, params=""):
     return data2
 
 
-data_species = connect_server("/listSpecies", "?limit=10&json=1")
+data_species = connect_server("/listSpecies?", "limit=10&json=1")
 print("LIST OF SPECIES IN THE BROWSER")
 print(data_species)
 

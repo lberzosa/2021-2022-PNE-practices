@@ -294,6 +294,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                     contents = read_html_file("error.html") \
                         .render()
 
+        else:
+            contents = Path("error.html").read_text()
+
         # Generating the response message
         self.send_response(200)  # -- Status line: OK!
 
@@ -303,13 +306,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
 
         else:
             self.send_header('Content-Type', 'text/html')
-        self.send_header('Content-Length', len(contents.encode()))
+
+        self.send_header('Content-Length', len(str.encode(contents)))
 
         # The header is finished
         self.end_headers()
 
         # Send the response message
-        self.wfile.write(contents.encode())
+        self.wfile.write(str.encode(contents))
 
         return
 
