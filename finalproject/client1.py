@@ -15,16 +15,10 @@ def connect_server(endpoint,parameters):
     except ConnectionRefusedError:
         print("ERROR! Cannot connect to the Server")
         exit()
-
-    # -- Read the response message from the server
     r1 = conn.getresponse()
-
-    # -- Print the status line
     print(f"Response received!: {r1.status} {r1.reason}\n")
-
-    # -- Read the response's body
     data1 = r1.read().decode("utf-8")
-    data2 = json.loads(data1)  # to transform it to a dictionary, it transforms the data into its corresponding type.
+    data2 = json.loads(data1)
     return data2
 
 
