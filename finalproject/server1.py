@@ -109,7 +109,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 length = len(species)
                 species_2 = []
                 if limit > int(length):
-                    message = "sorry, you picked a number too high"
+                    message = "you have a mistake"
                 else:
                     message = ""
                     for i in range(0, limit):
@@ -172,17 +172,24 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
                 chromo = int(arguments['chromosome'][0].strip())
                 list = dict_answer["top_level_region"]
                 line = []
-                for i in range(0, len(list)):
-                    line.append(list[i]["name"])
-                site = line.index(str(chromo))
-                line_2 = list[site]
-                length = int(line_2["length"])
-                if "json" in arguments:
-                    contents = {"chromosome_lenght": length}
+                if chromo > 0:
+                    for i in range(0, len(list)):
+                        if int(list[i]["length"]) > chromo:
+                            line.append(list[i]["name"])
+                    if len(line) == 0:
+                        contents = read_html_file("error.html")\
+                    .render()
+                    else:
+                        if "json" in arguments:
+                            contents = {"chromosome_name": line}
+                        else:
+                            contents = read_html_file(path[1:] + ".html") \
+                                .render(context={
+                                "chromosome_name": line})
                 else:
-                    contents = read_html_file(path[1:] + ".html") \
-                        .render(context={
-                        "chromosome_lenght": length})
+                    contents = read_html_file("error.html") \
+                        .render()
+
             except Exception:
                 contents = read_html_file("error.html")\
                     .render()
@@ -293,4 +300,3 @@ with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print("")
         print("Stoped by the user")
         httpd.server_close()
-

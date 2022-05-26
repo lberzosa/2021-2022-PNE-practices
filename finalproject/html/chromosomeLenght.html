@@ -6,7 +6,11 @@
 </head>
 <body style="background-color: #f19778">
 <h1>Chromosome Length</h1>
-The lenght of the chromosome is {{context.chromosome_lenght}}
+The names of those chromosomes are
+{% for s in context.chromosome_name
+%}
+<p>{{s}}</p>
+{% endfor %}
 <br>
 <a href="/">Main page</a>
 </body>
