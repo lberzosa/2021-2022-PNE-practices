@@ -10,3 +10,5 @@
 
 #cuando en un html das la opción de sleccionar en unos genes, siempre ponemos un for en el index.
 #cuando el index nos devuelve una lista, en el html en particular añadimos un for.
+#for k, v in genes_dict.items():  ----> abrir diccionarios
+    print(k, "--->", v)

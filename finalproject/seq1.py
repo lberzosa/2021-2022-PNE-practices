@@ -118,7 +118,7 @@ class Seq:
             message += k + ": " + str(v[0]) + " (" + str(round(v[1], 1)) + "%)" + "\n"
         return message
 
-    def add_seq(self): #DEL EXAMEN ANTERIOR PARA ABRIR EL DICTADO Y SUMARLOTODO
+    def add_seq(self): #DEL EXAMEN ANTERIOR PARA ABRIR EL DICTADO Y TE LO SUMETODO
         d = {'A': 4, 'T': -6, 'C': -3, 'G': 7}
         addition = 0
         if self.strbases == "ERROR" or self.strbases == "NULL":
