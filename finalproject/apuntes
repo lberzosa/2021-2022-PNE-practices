@@ -7,3 +7,6 @@
         #if k == "associated_gene":  # si la key es associated_genes, appendeamos su value
             #v = t[k]
             #gene_list.append(v)
+
+#cuando en un html das la opción de sleccionar en unos genes, siempre ponemos un for en el index.
+#cuando el index nos devuelve una lista, en el html en particular añadimos un for.

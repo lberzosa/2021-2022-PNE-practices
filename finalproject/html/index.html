@@ -6,7 +6,6 @@
     </head>
     <body style="background-color: #fdd3d7;">
     <h1>Browsing humans and terrestrial vertebrates genome</h1>
-    <h2>BASIC LEVEL SERVICES</h2>
 
         <hr>
 
@@ -15,6 +14,9 @@
             <br>
             <br>
             limit: <input type="text" name ="limit">
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
             <br>
             <br>
             <input type="submit" value="Send">
@@ -27,6 +29,9 @@
             select the species: <input type="text" name="speciess">
             <br>
             <br>
+            json format? <input type="checkbox" name=json>
+            <br>
+            <br>
             <input type="submit" value="Send">
         </form>
 
@@ -35,10 +40,13 @@
              3) Chromosome length
             <br>
             <br>
-            Select the species: <input type="text" name="specie_3">
+            Select the species: <input type="text" name="specie">
             <br>
             <br>
-            Select a chromosome: <input type="type" name="chromosome">
+            Select a chromosome: <input type="text" name="chromosome">
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
             <br>
             <br>
             <input type="submit" value="Send">
@@ -54,6 +62,11 @@
                 <option value={{n}}>{{n}}</option>
                 {% endfor %}
             </select>
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
+            <br>
+            <br>
             <input type="submit" value="Send">
          </form>
         <hr>
@@ -66,6 +79,11 @@
                 <option value={{n}}>{{n}}</option>
                 {% endfor %}
             </select>
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
+            <br>
+            <br>
             <input type="submit" value="Send">
         </form>
 
@@ -79,27 +97,37 @@
                 <option value={{n}}>{{n}}</option>
                 {% endfor %}
             </select>
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
+            <br>
+            <br>
             <input type="submit" value="Send">
         </form>
 
         <hr>
 
         <form action="/geneList">
-            7) Gene list
+         7) Names of the genes in the chromosome:
             <br>
             <br>
-            Introduce a species: <input type="text" name="species">
-            Introduce the number of the chromosome: <input type="text" name="name">
+           Select the species: <input type="text" name="species">
             <br>
             <br>
-            Introduce the start point: <input type="text" name="start">
+           Select the chromosome: <input type="text" name="name">
             <br>
             <br>
-            Introduce the end point: <input type="text" name="end">
+           Select the starting point: <input type="text" name="start">
             <br>
             <br>
-            <input type="submit" value="Send">
-        </form>
+           Select the ending point: <input type="text" name="end">
+            <br>
+            <br>
+            json format? <input type="checkbox" name=json>
+            <br>
+            <br>
+            <input type="submit" value ="Send">
+            </form>
 
         </body>
         </html>
